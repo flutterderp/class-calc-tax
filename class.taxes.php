@@ -46,17 +46,17 @@ class Taxes
 				if(!empty($tax->tax_zip) && !in_array($this->ship_zip, $zips))
 					continue;
 				
-				if(in_array($this->ship_zip, $this->ship_tax_states))
+				if(in_array($this->ship_state, $this->ship_tax_states))
 				{
 					// Shipping taxable
 					$this->tax_total += ($this->sub_total + $this->ship_total) * ($tax->tax_rate / 100);
 				}
-				elseif(in_array($this->ship_zip, $this->merch_handling_states))
+				elseif(in_array($this->ship_state, $this->merch_handling_states))
 				{
 					// Merchandise + handling
 					$this->tax_total += $this->sub_total * ($tax->tax_rate / 100);
 				}
-				elseif(in_array($this->ship_zip, $this->merch_tax_states))
+				elseif(in_array($this->ship_state, $this->merch_tax_states))
 				{
 					// Merchandise only
 					$this->tax_total += $this->sub_total * ($tax->tax_rate / 100);
@@ -67,13 +67,16 @@ class Taxes
 				}
 			}
 			
-			return number_format($this->tax_total, 2);
+			$this->tax_total = number_format($this->tax_total, 2);
 		}
 		else
 		{
 			// No taxes found
-			return false;
+			$this->tax_total = 0.00;
+			// return false;
 		}
+		
+		return $this->tax_total;
 	}
-	
+	// End class	
 }
